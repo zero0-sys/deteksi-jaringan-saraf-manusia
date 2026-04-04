@@ -140,13 +140,7 @@ const SecureTopBar = () => {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[60] bg-black border-b border-gray-800 select-none" style={{ userSelect: 'none' }}>
-      <div className="max-w-7xl mx-auto px-3 py-1.5 flex items-center justify-between text-[10px] sm:text-xs font-mono tracking-wider">
-        <div className="flex items-center gap-3">
-          <Shield className="w-3 h-3 text-green-500" />
-          <span className="text-green-500 uppercase font-bold">Encrypted</span>
-          <span className="text-gray-600">|</span>
-          <span className="text-gray-400">TLS 1.3</span>
-        </div>
+      <div className="max-w-7xl mx-auto px-3 py-1.5 flex items-center justify-end text-[10px] sm:text-xs font-mono tracking-wider">
         <div className="flex items-center gap-3">
           <Wifi className={`w-3 h-3 text-cyan-400 transition-opacity duration-300 ${isRotating ? 'opacity-30' : 'opacity-100'}`} />
           <span className={`text-cyan-400 tabular-nums transition-opacity duration-300 ${isRotating ? 'opacity-0' : 'opacity-100'}`}>
@@ -378,7 +372,13 @@ export default function App() {
     setChaosScore(null);
     
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      // Prioritize VITE_GEMINI_API_KEY from import.meta.env for Netlify
+      // Fallback to process.env.GEMINI_API_KEY for local/AI Studio compat
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY || (typeof process !== 'undefined' && process.env ? process.env.GEMINI_API_KEY : '');
+      if (!apiKey) {
+        throw new Error('API Key tidak ditemukan. Pastikan Anda telah mengatur VITE_GEMINI_API_KEY di Netlify atau environment lokal.');
+      }
+      const ai = new GoogleGenAI({ apiKey: apiKey });
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: `Analisis teks keluh kesah berikut.
