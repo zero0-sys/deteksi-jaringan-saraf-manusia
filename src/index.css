@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+  min-height: 100vh;
+  margin: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection in input fields */
+textarea, input {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Modern Boxy Grid Background with Animated Gradient */
+.bg-modern-grid {
+  background-color: #000000;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  position: relative;
+}
+
+.bg-modern-grid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg, 
+    transparent 20%, 
+    rgba(255, 255, 255, 0.02) 40%, 
+    rgba(255, 255, 255, 0.06) 50%, 
+    rgba(255, 255, 255, 0.02) 60%, 
+    transparent 80%
+  );
+  background-size: 300% 300%;
+  animation: boxyScan 6s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes boxyScan {
+  0% { background-position: 200% 200%; }
+  100% { background-position: -100% -100%; }
+}
+
+/* Custom Animations */
+@keyframes fluid-scan {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+.animate-fluid-scan {
+  animation: fluid-scan 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes pulse-fast {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+.animate-pulse-fast {
+  animation: pulse-fast 0.5s ease-in-out infinite;
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20%); }
+}
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
+
+/* Custom scrollbar for terminal */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+  border-left: 1px solid #333333;
+}
+::-webkit-scrollbar-thumb {
+  background: #ffffff;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #cccccc;
+}
