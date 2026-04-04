@@ -104,7 +104,7 @@ Aplikasi ini sudah dikonfigurasi untuk dideploy dengan mudah ke [Netlify](https:
 2. Netlify akan otomatis membaca konfigurasi `netlify.toml` (`npm run build` dan folder `dist`).
 3. Buka **Site Settings** > **Environment Variables**.
 4. Tambahkan _variable_ baru:
-   - **Key**: `VITE_GEMINI_API_KEY` atau `GEMINI_API_KEY` (sesuai konfigurasi Anda)
+   - **Key**: `VITE_GEMINI_API_KEY`
    - **Value**: Masukkan API Key rahasia dari Google AI Studio.
 5. Klik **Deploy / Trigger Deploy**.
 6. Selesai! Web Anda sekarang live dengan proteksi aktif.

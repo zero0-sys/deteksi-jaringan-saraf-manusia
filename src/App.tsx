@@ -114,45 +114,7 @@ const SecurityLayer = () => {
   return null;
 };
 
-// ═══════════════════════════════════════════════════════════
-// TOP BAR — Rotating Fake IP + Security Status
-// ═══════════════════════════════════════════════════════════
-const SecureTopBar = () => {
-  const [ip, setIp] = useState('----.----.----.----');
-  const [isRotating, setIsRotating] = useState(false);
-
-  const generateFakeIP = useCallback(() => {
-    const octets = Array.from({ length: 4 }, () => Math.floor(Math.random() * 256));
-    return octets.join('.');
-  }, []);
-
-  useEffect(() => {
-    setIp(generateFakeIP());
-    const interval = setInterval(() => {
-      setIsRotating(true);
-      setTimeout(() => {
-        setIp(generateFakeIP());
-        setIsRotating(false);
-      }, 300);
-    }, 4000); // Rotate IP every 4 seconds
-    return () => clearInterval(interval);
-  }, [generateFakeIP]);
-
-  return (
-    <div className="fixed top-0 left-0 right-0 z-[60] bg-black border-b border-gray-800 select-none" style={{ userSelect: 'none' }}>
-      <div className="max-w-7xl mx-auto px-3 py-1.5 flex items-center justify-end text-[10px] sm:text-xs font-mono tracking-wider">
-        <div className="flex items-center gap-3">
-          <Wifi className={`w-3 h-3 text-cyan-400 transition-opacity duration-300 ${isRotating ? 'opacity-30' : 'opacity-100'}`} />
-          <span className={`text-cyan-400 tabular-nums transition-opacity duration-300 ${isRotating ? 'opacity-0' : 'opacity-100'}`}>
-            {ip}
-          </span>
-          <span className="text-gray-600">|</span>
-          <span className="text-gray-500 hidden sm:inline">NODE: PROXIED</span>
-        </div>
-      </div>
-    </div>
-  );
-};
+// Removed SecureTopBar as requested
 
 interface LogLine {
   id: string;
@@ -372,11 +334,10 @@ export default function App() {
     setChaosScore(null);
     
     try {
-      // Prioritize VITE_GEMINI_API_KEY from import.meta.env for Netlify
-      // Fallback to process.env.GEMINI_API_KEY for local/AI Studio compat
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY || (typeof process !== 'undefined' && process.env ? process.env.GEMINI_API_KEY : '');
+      // Hanya menggunakan VITE_GEMINI_API_KEY agar tidak membingungkan
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
       if (!apiKey) {
-        throw new Error('API Key tidak ditemukan. Pastikan Anda telah mengatur VITE_GEMINI_API_KEY di Netlify atau environment lokal.');
+        throw new Error('API Key tidak ditemukan. Pastikan Anda telah mengatur VITE_GEMINI_API_KEY di Netlify.');
       }
       const ai = new GoogleGenAI({ apiKey: apiKey });
       const response = await ai.models.generateContent({
@@ -448,9 +409,8 @@ Teks: "${input}"`,
   return (
     <>
       <SecurityLayer />
-      <SecureTopBar />
       {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
-      <div className={`min-h-screen bg-modern-grid text-white p-2 sm:p-4 md:p-8 pt-12 sm:pt-14 flex flex-col items-center justify-center font-sans relative overflow-hidden ${showSplash ? 'hidden' : ''}`}>
+      <div className={`min-h-screen bg-modern-grid text-white p-2 sm:p-4 md:p-8 flex flex-col items-center justify-center font-sans relative overflow-hidden ${showSplash ? 'hidden' : ''}`}>
         <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 relative z-10">
           
           {/* Header */}
