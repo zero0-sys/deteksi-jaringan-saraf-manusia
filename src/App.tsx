@@ -3,9 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { GoogleGenAI, Type } from '@google/genai';
-import { Terminal, Brain, Activity, Loader2, Send, AlertTriangle, CheckCircle2, Copy, Download, X, FileText, Cpu, Network, Smile, Frown, Meh, Angry, Annoyed, Laugh, Shield, Wifi } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Terminal, Brain, Activity, Loader2, Send, AlertTriangle, CheckCircle2, Copy, Download, X, FileText, Cpu, Network, Smile, Frown, Meh, Angry, Annoyed, Laugh } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 // ═══════════════════════════════════════════════════════════
@@ -334,51 +333,26 @@ export default function App() {
     setChaosScore(null);
     
     try {
-      // @ts-ignore - Injected by Vite
-      // eslint-disable-next-line
-      const injectedKey = typeof __GEMINI_API_KEY__ !== 'undefined' ? __GEMINI_API_KEY__ : '';
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY || injectedKey;
-      
-      if (!apiKey || apiKey === '') {
-        throw new Error('API Key tidak ditemukan. Pastikan Anda telah mengatur VITE_GEMINI_API_KEY di Netlify.');
-      }
-      const ai = new GoogleGenAI({ apiKey: apiKey });
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: `Analisis teks keluh kesah berikut.
-Tentukan tingkat kekacauan pikiran (0-100).
-Buat 15 pesan log sistem (kode error jika kacau, atau kode success jika bahagia) dalam bahasa Indonesia yang SANGAT SPESIFIK dengan isi teks pengguna. 
-Gunakan format log terminal (misal: "ERR_FINANCE: Saldo tidak mencukupi untuk harapan" atau "SYS_LOVE: Koneksi hati terjalin kuat").
-
-Selain itu, buatkan 'analysisText' (teks paragraf) berdasarkan aturan berikut:
-JIKA tingkat kekacauan > 50: Berikan saran pengobatan, sebuah quotes penyemangat, dan saran tegas untuk pergi ke psikolog atau bercerita ke teman kepercayaan/orang tua.
-JIKA tingkat kekacauan <= 50: Berikan hadiah berupa ramalan masa depan yang positif, apa yang harus dia lakukan ke depannya, dan petunjuk arah kehidupan sesuai dengan cerita yang dia bagikan.
-
-Teks: "${input}"`,
-        config: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              chaosLevel: { type: Type.NUMBER },
-              systemMessages: {
-                type: Type.ARRAY,
-                items: { type: Type.STRING }
-              },
-              analysisText: { type: Type.STRING }
-            },
-            required: ["chaosLevel", "systemMessages", "analysisText"]
-          }
-        }
+      const response = await fetch('/.netlify/functions/tanyaGemini', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ prompt: input })
       });
 
-      const result = JSON.parse(response.text);
+      const result = await response.json();
+      
+      if (!response.ok || result.error) {
+        throw new Error(result.error || 'Server error');
+      }
+
       setChaosScore(result.chaosLevel);
       setIsScanning(false); // Turn off scanning state so generation UI shows
       startGeneratingLogs(result.chaosLevel, result.systemMessages, result.analysisText);
     } catch (error) {
-      console.error(error);
-      setLogs([{ id: 'err', type: 'error', text: 'FATAL: Gagal terhubung ke API jaringan neuron.' }]);
+      console.error("Error fetching dari backend:", error);
+      setLogs([{ id: 'err', type: 'error', text: 'FATAL: Gagal terhubung ke sistem server neural.' }]);
       setIsScanning(false);
     }
   };
