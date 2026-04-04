@@ -334,9 +334,12 @@ export default function App() {
     setChaosScore(null);
     
     try {
-      // Hanya menggunakan VITE_GEMINI_API_KEY agar tidak membingungkan
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      if (!apiKey) {
+      // @ts-ignore - Injected by Vite
+      // eslint-disable-next-line
+      const injectedKey = typeof __GEMINI_API_KEY__ !== 'undefined' ? __GEMINI_API_KEY__ : '';
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY || injectedKey;
+      
+      if (!apiKey || apiKey === '') {
         throw new Error('API Key tidak ditemukan. Pastikan Anda telah mengatur VITE_GEMINI_API_KEY di Netlify.');
       }
       const ai = new GoogleGenAI({ apiKey: apiKey });
