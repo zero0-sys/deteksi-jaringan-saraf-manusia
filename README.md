@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" alt="Neural Mind Scanner Banner" width="100%" />
-</p>
-
 <h1 align="center">🧠 Neural Mind Scanner</h1>
 
 <p align="center">
@@ -98,6 +94,20 @@ npm run dev
 ```
 
 Aplikasi akan berjalan di `http://localhost:3000`
+
+## 🚀 Deployment (Netlify)
+
+Aplikasi ini sudah dikonfigurasi untuk dideploy dengan mudah ke [Netlify](https://www.netlify.com/).
+
+### Langkah Deployment:
+1. Hubungkan repository GitHub ini ke akun Netlify Anda.
+2. Netlify akan otomatis membaca konfigurasi `netlify.toml` (`npm run build` dan folder `dist`).
+3. Buka **Site Settings** > **Environment Variables**.
+4. Tambahkan _variable_ baru:
+   - **Key**: `VITE_GEMINI_API_KEY` atau `GEMINI_API_KEY` (sesuai konfigurasi Anda)
+   - **Value**: Masukkan API Key rahasia dari Google AI Studio.
+5. Klik **Deploy / Trigger Deploy**.
+6. Selesai! Web Anda sekarang live dengan proteksi aktif.
 
 ---
 
