@@ -1,6 +1,6 @@
 // File: netlify/functions/tanyaGemini.js
 
-exports.handler = async function(event, context) {
+export const handler = async (event, context) => {
   // Hanya izinkan method POST dari frontend
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
@@ -22,7 +22,7 @@ exports.handler = async function(event, context) {
     }
 
     // Model yang request
-    const model = "gemini-3-flash-preview"; 
+    const model = "gemini-1.5-flash"; 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
     const promptText = `Analisis teks keluh kesah berikut.
