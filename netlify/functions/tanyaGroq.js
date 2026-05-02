@@ -1,4 +1,4 @@
-// File: netlify/functions/tanyaGemini.js
+// File: netlify/functions/tanyaGroq.js
 
 export const handler = async (event, context) => {
   // Hanya izinkan method POST dari frontend
@@ -12,18 +12,18 @@ export const handler = async (event, context) => {
     const pesanUser = body.prompt;
 
     // Memanggil API Key yang ada di Environment Variables Netlify
-    const apiKey = process.env.GEMINI_API_KEY; 
+    const apiKey = process.env.GROQ_API_KEY; 
     
     if (!apiKey) {
       return { 
         statusCode: 500, 
-        body: JSON.stringify({ error: "API Key GEMINI_API_KEY tidak ditemukan di backend Netlify." }) 
+        body: JSON.stringify({ error: "API Key GROQ_API_KEY tidak ditemukan di backend Netlify." }) 
       };
     }
 
     // Model yang request
-    const model = "gemini-1.5-flash"; 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const model = "llama-3.3-70b-versatile"; 
+    const url = `https://api.groq.com/openai/v1/chat/completions`;
 
     const promptText = `Analisis teks keluh kesah berikut.
 Tentukan tingkat kekacauan pikiran (0-100).
@@ -34,33 +34,29 @@ Selain itu, buatkan 'analysisText' (teks paragraf) berdasarkan aturan berikut:
 JIKA tingkat kekacauan > 50: Berikan saran pengobatan, sebuah quotes penyemangat, dan saran tegas untuk pergi ke psikolog atau bercerita ke teman kepercayaan/orang tua.
 JIKA tingkat kekacauan <= 50: Berikan hadiah berupa ramalan masa depan yang positif, apa yang harus dia lakukan ke depannya, dan petunjuk arah kehidupan sesuai dengan cerita yang dia bagikan.
 
+Output HARUS BERBENTUK JSON dengan struktur berikut dan HANYA JSON SAJA (tanpa tag markdown tambahan):
+{
+  "chaosLevel": (number),
+  "systemMessages": ["string", "string"],
+  "analysisText": "string"
+}
+
 Teks: "${pesanUser}"`;
 
-    // Nembak ke API Google Gemini REST API dengan konfigurasi JSON Schema
+    // Nembak ke API Groq
     const response = await fetch(url, {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        contents: [{
-          parts: [{ text: promptText }]
-        }],
-        generationConfig: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: "OBJECT",
-            properties: {
-              chaosLevel: { type: "NUMBER" },
-              systemMessages: {
-                type: "ARRAY",
-                items: { type: "STRING" }
-              },
-              analysisText: { type: "STRING" }
-            },
-            required: ["chaosLevel", "systemMessages", "analysisText"]
-          }
-        }
+        model: model,
+        messages: [
+          { role: "system", content: "You are a helpful assistant that only outputs valid JSON." },
+          { role: "user", content: promptText }
+        ],
+        response_format: { type: "json_object" }
       })
     });
 
@@ -69,15 +65,15 @@ Teks: "${pesanUser}"`;
     if (!response.ok) {
       return { 
         statusCode: response.status, 
-        body: JSON.stringify({ error: data.error?.message || "Error dari server Gemini" }) 
+        body: JSON.stringify({ error: data.error?.message || "Error dari server Groq" }) 
       };
     }
 
-    // Mengambil output tipe JSON yang di-generate oleh Gemini
-    const jsonString = data.candidates[0].content.parts[0].text;
+    // Mengambil output tipe JSON yang di-generate oleh Groq
+    const jsonString = data.choices[0].message.content;
     const parsedData = JSON.parse(jsonString);
 
-    // Mengembalikan hasil jawaban Gemini berbentuk JSON ke frontend
+    // Mengembalikan hasil jawaban Groq berbentuk JSON ke frontend
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },

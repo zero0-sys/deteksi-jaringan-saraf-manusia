@@ -333,7 +333,7 @@ export default function App() {
     setChaosScore(null);
     
     try {
-      const response = await fetch('/.netlify/functions/tanyaGemini', {
+      const response = await fetch('/.netlify/functions/tanyaGroq', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

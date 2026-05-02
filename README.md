@@ -18,7 +18,7 @@
   <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React 19" />
   <img src="https://img.shields.io/badge/TypeScript-5.8-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Vite-6-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
-  <img src="https://img.shields.io/badge/Gemini_AI-Powered-4285F4?style=flat-square&logo=google&logoColor=white" alt="Gemini AI" />
+  <img src="https://img.shields.io/badge/Groq_AI-Powered-f55036?style=flat-square&logo=groq&logoColor=white" alt="Groq AI" />
   <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License MIT" />
 </p>
 
@@ -26,7 +26,7 @@
 
 ## 📖 Tentang
 
-**Neural Mind Scanner** adalah aplikasi web interaktif yang mensimulasikan pemindaian pikiran manusia menggunakan kecerdasan buatan Google Gemini. Pengguna cukup menuliskan keluh kesah atau pikiran mereka, dan sistem akan:
+**Neural Mind Scanner** adalah aplikasi web interaktif yang mensimulasikan pemindaian pikiran manusia menggunakan kecerdasan buatan Groq AI. Pengguna cukup menuliskan keluh kesah atau pikiran mereka, dan sistem akan:
 
 1. **Menganalisis** tingkat kekacauan pikiran (0–100%)
 2. **Men-generate** ribuan baris log jaringan neuron secara real-time
@@ -43,7 +43,7 @@
 |-------|-----------|
 | 🎭 **Splash Screen Dinamis** | Animasi loading dengan ikon emosi yang berubah-ubah |
 | ⚡ **Glitch Header** | Efek teks scramble ala terminal hacker yang berulang setiap 5 detik |
-| 🧪 **AI Analysis** | Analisis kekacauan pikiran menggunakan Google Gemini AI |
+| 🧪 **AI Analysis** | Analisis kekacauan pikiran menggunakan Groq AI |
 | 📊 **Live Chart** | Grafik fluktuasi kesadaran real-time menggunakan Recharts |
 | 💻 **Terminal Log** | Ribuan baris log neural yang di-generate berdasarkan tingkat kekacauan |
 | 📋 **Export** | Salin atau unduh seluruh log neural sebagai file `.txt` |
@@ -60,7 +60,7 @@
 Frontend Framework  : React 19 + TypeScript
 Build Tool          : Vite 6
 Styling             : Tailwind CSS 4
-AI Engine           : Google Gemini 3 Flash Preview
+AI Engine           : Groq AI (Llama 3.3 70B Versatile)
 Charts              : Recharts
 Icons               : Lucide React
 Animation           : Framer Motion
@@ -73,7 +73,7 @@ Animation           : Framer Motion
 ### Prasyarat
 
 - [Node.js](https://nodejs.org/) versi 18 atau lebih baru
-- [Google Gemini API Key](https://ai.google.dev/)
+- [Groq API Key](https://console.groq.com/)
 
 ### Langkah-langkah
 
@@ -87,7 +87,7 @@ npm install
 
 # 3. Konfigurasi API Key
 cp .env.example .env.local
-# Edit .env.local dan masukkan GEMINI_API_KEY Anda
+# Edit .env.local dan masukkan GROQ_API_KEY Anda
 
 # 4. Jalankan aplikasi
 npm run dev
@@ -104,8 +104,8 @@ Aplikasi ini sudah dikonfigurasi untuk dideploy dengan mudah ke [Netlify](https:
 2. Netlify akan otomatis membaca konfigurasi `netlify.toml` (`npm run build` dan folder `dist`).
 3. Buka **Site Settings** > **Environment Variables**.
 4. Tambahkan _variable_ baru:
-   - **Key**: `VITE_GEMINI_API_KEY`
-   - **Value**: Masukkan API Key rahasia dari Google AI Studio.
+   - **Key**: `GROQ_API_KEY`
+   - **Value**: Masukkan API Key rahasia dari Groq Console.
 5. Klik **Deploy / Trigger Deploy**.
 6. Selesai! Web Anda sekarang live dengan proteksi aktif.
 
